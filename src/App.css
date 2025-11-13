@@ -1,0 +1,780 @@
+/* 전체 레이아웃 */
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* 헤더 */
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.app-header h1 {
+  color: #212529;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.date-selector label {
+  font-weight: 500;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.date-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  background: #ffffff;
+  color: #212529;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* 탭 네비게이션 */
+.tab-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  overflow-x: auto;
+}
+
+.tab-nav button {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.tab-nav button:hover {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.tab-nav button.active {
+  background: #4a90e2;
+  color: #ffffff;
+}
+
+.app-main {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 0;
+}
+
+/* ========== 지출 입력 폼 ========== */
+.expense-form-container {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+.expense-form-container h2 {
+  color: #212529;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #212529;
+  font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  background: #ffffff;
+  color: #212529;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.participants-checkbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+}
+
+.checkbox-label:hover {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.checkbox-label span {
+  font-size: 0.9rem;
+  color: #212529;
+}
+
+.split-info {
+  margin-top: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background: #e7f3ff;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  border: 1px solid #b3d9ff;
+}
+
+.split-amount {
+  color: #0066cc;
+  font-weight: 500;
+}
+
+.remainder {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+}
+
+.submit-button {
+  padding: 0.75rem 1.5rem;
+  background: #4a90e2;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #357abd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:disabled {
+  background: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.expense-form-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+/* ========== 지출 목록 ========== */
+.expense-list-container {
+  margin-top: 2rem;
+}
+
+.expense-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+
+.expense-list-header h2 {
+  color: #212529;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.total-amount {
+  font-size: 1rem;
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.total-amount strong {
+  font-size: 1.1rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.expense-item {
+  padding: 1.25rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #ffffff;
+  transition: all 0.2s;
+}
+
+.expense-item:hover {
+  border-color: #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.expense-info {
+  margin-bottom: 1rem;
+}
+
+.expense-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.expense-location {
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.expense-memo {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.expense-participants {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.participant-avatars {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.no-participants {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.split-info {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.expense-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.edit-button,
+.delete-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: #ffffff;
+}
+
+.edit-button {
+  color: #4a90e2;
+  border-color: #4a90e2;
+}
+
+.edit-button:hover {
+  background: #4a90e2;
+  color: #ffffff;
+}
+
+.delete-button {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.delete-button:hover {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.expense-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.save-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.save-button {
+  background: #4a90e2;
+  color: #ffffff;
+  border-color: #4a90e2;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #357abd;
+}
+
+.save-button:disabled {
+  background: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  border-color: #dee2e6;
+}
+
+.cancel-button {
+  background: #ffffff;
+  color: #6c757d;
+}
+
+.cancel-button:hover {
+  background: #f8f9fa;
+}
+
+.expense-list-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+/* ========== 사용자 관리 ========== */
+.user-management-container {
+  padding: 1.5rem;
+}
+
+.user-management-container h2 {
+  color: #212529;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.add-user-form {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.add-user-form .form-group {
+  flex-direction: row;
+  gap: 0.75rem;
+}
+
+.add-user-form input {
+  flex: 1;
+}
+
+.add-button {
+  padding: 0.625rem 1.25rem;
+  background: #4a90e2;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.add-button:hover:not(:disabled) {
+  background: #357abd;
+}
+
+.add-button:disabled {
+  background: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s;
+}
+
+.user-item:hover {
+  border-color: #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #212529;
+  font-size: 0.95rem;
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.user-edit-form {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* ========== 정산 결과 ========== */
+.settlement-display-container {
+  padding: 1.5rem;
+}
+
+.settlement-display-container h2 {
+  color: #212529;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.total-amount-card {
+  background: linear-gradient(135deg, #4a90e2 0%, #50c878 100%);
+  color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.total-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.total-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.user-totals-section,
+.expenses-summary-section {
+  margin-bottom: 2rem;
+}
+
+.user-totals-section h3,
+.expenses-summary-section h3 {
+  color: #212529;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.user-totals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-total-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.user-total-item .user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-total-item .user-name {
+  font-weight: 500;
+  color: #212529;
+}
+
+.user-total-item .user-amount {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a90e2;
+}
+
+.expenses-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.expense-summary-item {
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-amount {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.summary-location {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.summary-participants {
+  margin-bottom: 0.5rem;
+}
+
+.summary-split {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.settlement-display-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+/* ========== 반응형 디자인 ========== */
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem 0.5rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .date-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-input {
+    width: 100%;
+  }
+
+  .tab-nav {
+    padding: 0.25rem;
+  }
+
+  .tab-nav button {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .expense-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 1rem;
+  }
+
+  .total-amount {
+    width: 100%;
+    text-align: center;
+  }
+
+  .expense-list {
+    padding: 0 1rem 1rem;
+  }
+
+  .expense-item {
+    padding: 1rem;
+  }
+
+  .expense-amount {
+    font-size: 1.3rem;
+  }
+
+  .participants-checkbox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-user-form .form-group {
+    flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
+  .user-edit-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+
+  .total-value {
+    font-size: 1.75rem;
+  }
+
+  .user-total-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .user-total-item .user-amount {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .expense-form-container h2,
+  .expense-list-header h2,
+  .user-management-container h2,
+  .settlement-display-container h2 {
+    font-size: 1.1rem;
+  }
+
+  .total-value {
+    font-size: 1.5rem;
+  }
+}

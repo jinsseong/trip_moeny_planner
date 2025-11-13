@@ -1,0 +1,230 @@
+.admin-page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.admin-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-header .header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logout-button {
+  padding: 0.5rem 1rem;
+  background: #dc3545;
+  border: 1px solid #dc3545;
+  border-radius: 6px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #c82333;
+  border-color: #bd2130;
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #212529;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+  overflow-x: auto;
+}
+
+.admin-tabs button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+
+.admin-tabs button:hover {
+  color: #212529;
+  background: #f8f9fa;
+}
+
+.admin-tabs button.active {
+  color: #4a90e2;
+  border-bottom-color: #4a90e2;
+  background: transparent;
+}
+
+.admin-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.settlement-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.date-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.date-selector-wrapper label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #212529;
+}
+
+.settings-tab h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1.5rem;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.settings-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1rem;
+}
+
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.settings-item p {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0;
+  flex: 1;
+}
+
+.danger-button {
+  padding: 0.625rem 1.25rem;
+  background: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.danger-button:hover {
+  background: #c82333;
+}
+
+.coming-soon {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-style: italic;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-header .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .admin-tabs {
+    padding: 1rem;
+  }
+
+  .admin-tabs button {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .settings-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .danger-button {
+    width: 100%;
+  }
+}
+
