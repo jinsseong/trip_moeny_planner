@@ -122,7 +122,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: '지원하지 않는 메서드입니다.' });
   } catch (error) {
     console.error('Supabase Error:', error);
-    return res.status(500).json({ error: '서버 오류가 발생했습니다.', details: error.message });
+    console.error('Error details:', {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint
+    });
+    
+    // 더 자세한 오류 정보 반환
+    return res.status(500).json({ 
+      error: '서버 오류가 발생했습니다.', 
+      details: error.message,
+      code: error.code,
+      hint: error.hint || 'Vercel 로그를 확인하세요.'
+    });
   }
 }
 
