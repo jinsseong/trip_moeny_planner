@@ -87,8 +87,26 @@
 
 /* 컬럼 너비 */
 .col-date {
-  width: 100px;
-  min-width: 100px;
+  width: 150px;
+  min-width: 150px;
+}
+
+.date-header {
+  font-weight: 600;
+  color: #4a90e2;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid #4a90e2;
+  margin-bottom: 0.25rem;
+}
+
+.date-empty {
+  height: 0.5rem;
+}
+
+.date-edit {
+  font-size: 0.8rem;
+  color: #6c757d;
 }
 
 .col-location {

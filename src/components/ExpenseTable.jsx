@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import Avatar from './Avatar';
 import '../ExpenseTable.css';
 
 const API_BASE = '/api';
 
-function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpenseUpdated, onExpenseDeleted }) {
+function ExpenseTable({ expenses, users, selectedDate, selectedTripId, onExpenseAdded, onExpenseUpdated, onExpenseDeleted }) {
   const [editingCell, setEditingCell] = useState(null);
   const [newRow, setNewRow] = useState({
     date: selectedDate,
     location: '',
+    item_name: '',
     memo: '',
     amount: '',
     participant_ids: [],
@@ -43,6 +44,7 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
           date: updateData.date,
           amount: updateData.amount,
           location: updateData.location || null,
+          item_name: updateData.item_name || null,
           memo: updateData.memo || null,
           category: updateData.category || '기타',
           participant_ids: updateData.participant_ids || []
@@ -77,6 +79,7 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
           date: expense.date,
           amount: expense.amount,
           location: expense.location || null,
+          item_name: expense.item_name || null,
           memo: expense.memo || null,
           category: expense.category || '기타',
           participant_ids: newIds
@@ -105,9 +108,11 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
           date: newRow.date,
           amount: parseInt(newRow.amount),
           location: newRow.location || null,
+          item_name: newRow.item_name || null,
           memo: newRow.memo || null,
           category: newRow.category,
-          participant_ids: newRow.participant_ids
+          participant_ids: newRow.participant_ids,
+          trip_id: selectedTripId || null
         }),
       });
 
@@ -115,6 +120,7 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
         setNewRow({
           date: selectedDate,
           location: '',
+          item_name: '',
           memo: '',
           amount: '',
           participant_ids: [],
@@ -154,6 +160,29 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
     return `${month}/${day}`;
   };
 
+  const formatDateFull = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const weekday = weekdays[date.getDay()];
+    return `${year}.${month}.${day} (${weekday})`;
+  };
+
+  // 날짜별로 그룹핑
+  const groupedExpenses = expenses.reduce((groups, expense) => {
+    const date = expense.date;
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(expense);
+    return groups;
+  }, {});
+
+  const sortedDates = Object.keys(groupedExpenses).sort((a, b) => b.localeCompare(a));
+
   return (
     <div className="expense-table-container">
       <div className="table-wrapper">
@@ -170,9 +199,20 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
             </tr>
           </thead>
           <tbody>
-            {expenses.map(expense => (
+            {sortedDates.map(date => {
+              const dateExpenses = groupedExpenses[date];
+              return (
+                <Fragment key={date}>
+                  {dateExpenses.map((expense, index) => (
               <tr key={expense.id} className="expense-row">
                 <td className="cell-date">
+                  {index === 0 ? (
+                    <div className="date-header">
+                      {formatDateFull(expense.date)}
+                    </div>
+                  ) : (
+                    <div className="date-empty"></div>
+                  )}
                   {editingCell?.expenseId === expense.id && editingCell?.field === 'date' ? (
                     <input
                       type="date"
@@ -185,8 +225,8 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                       }}
                       autoFocus
                     />
-                  ) : (
-                    <span onClick={() => handleCellClick(expense.id, 'date')}>
+                  ) : index === 0 ? null : (
+                    <span onClick={() => handleCellClick(expense.id, 'date')} className="date-edit">
                       {formatDate(expense.date)}
                     </span>
                   )}
@@ -211,21 +251,21 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                   )}
                 </td>
                 <td className="cell-memo">
-                  {editingCell?.expenseId === expense.id && editingCell?.field === 'memo' ? (
+                  {editingCell?.expenseId === expense.id && editingCell?.field === 'item_name' ? (
                     <input
                       type="text"
-                      value={expense.memo || ''}
-                      onBlur={(e) => handleCellChange(expense.id, 'memo', e.target.value)}
+                      value={expense.item_name || ''}
+                      onBlur={(e) => handleCellChange(expense.id, 'item_name', e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          handleCellChange(expense.id, 'memo', e.target.value);
+                          handleCellChange(expense.id, 'item_name', e.target.value);
                         }
                       }}
                       autoFocus
                     />
                   ) : (
-                    <span onClick={() => handleCellClick(expense.id, 'memo')}>
-                      {expense.memo || '-'}
+                    <span onClick={() => handleCellClick(expense.id, 'item_name')}>
+                      {expense.item_name || '-'}
                     </span>
                   )}
                 </td>
@@ -256,7 +296,7 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                   />
                 </td>
                 <td className="cell-note">
-                  {editingCell?.expenseId === expense.id && editingCell?.field === 'note' ? (
+                  {editingCell?.expenseId === expense.id && editingCell?.field === 'memo' ? (
                     <input
                       type="text"
                       value={expense.memo || ''}
@@ -269,7 +309,7 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                       autoFocus
                     />
                   ) : (
-                    <span onClick={() => handleCellClick(expense.id, 'note')}>
+                    <span onClick={() => handleCellClick(expense.id, 'memo')}>
                       {expense.memo || '-'}
                     </span>
                   )}
@@ -284,7 +324,10 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                   </button>
                 </td>
               </tr>
-            ))}
+                  ))}
+                </Fragment>
+              );
+            })}
             {/* 새 행 추가 */}
             <tr className="new-row">
               <td className="cell-date">
@@ -306,8 +349,8 @@ function ExpenseTable({ expenses, users, selectedDate, onExpenseAdded, onExpense
                 <input
                   type="text"
                   placeholder="항목명"
-                  value={newRow.memo}
-                  onChange={(e) => setNewRow({ ...newRow, memo: e.target.value })}
+                  value={newRow.item_name}
+                  onChange={(e) => setNewRow({ ...newRow, item_name: e.target.value })}
                 />
               </td>
               <td className="cell-amount">

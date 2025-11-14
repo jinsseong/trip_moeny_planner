@@ -13,6 +13,7 @@ import initDbHandler from './api/init-db.js';
 import participantsHandler from './api/participants.js';
 import expensesSupabaseHandler from './api/expenses-supabase.js';
 import calculateSupabaseHandler from './api/calculate-supabase.js';
+import tripsHandler from './api/trips.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -41,6 +42,7 @@ if (useSupabase) {
   app.use('/api/participants', (req, res) => participantsHandler(req, res));
   app.use('/api/expenses', (req, res) => expensesSupabaseHandler(req, res));
   app.use('/api/calculate', (req, res) => calculateSupabaseHandler(req, res));
+  app.use('/api/trips', (req, res) => tripsHandler(req, res));
 } else {
   console.log('⚠️ JSON 파일 모드로 실행됩니다. Supabase 환경변수를 설정하세요.');
   app.use('/api/users', (req, res) => usersHandler(req, res));

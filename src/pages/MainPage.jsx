@@ -9,11 +9,14 @@ const API_BASE = '/api';
 function MainPage() {
   const [expenses, setExpenses] = useState([]);
   const [users, setUsers] = useState([]);
+  const [trips, setTrips] = useState([]);
+  const [selectedTripId, setSelectedTripId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [settlement, setSettlement] = useState(null);
 
   useEffect(() => {
     loadUsers();
+    loadTrips();
     loadExpenses();
   }, []);
 
@@ -22,7 +25,7 @@ function MainPage() {
       loadExpenses();
       loadSettlement();
     }
-  }, [selectedDate, users.length]);
+  }, [selectedDate, selectedTripId, users.length]);
 
   const loadUsers = async () => {
     try {
@@ -34,9 +37,32 @@ function MainPage() {
     }
   };
 
+  const loadTrips = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/trips`);
+      const data = await response.json();
+      setTrips(data || []);
+      // 첫 번째 여행을 기본 선택
+      if (data && data.length > 0 && !selectedTripId) {
+        setSelectedTripId(data[0].id);
+      }
+    } catch (error) {
+      console.error('여행 로드 오류:', error);
+    }
+  };
+
   const loadExpenses = async () => {
     try {
-      const response = await fetch(`${API_BASE}/expenses`);
+      let url = `${API_BASE}/expenses`;
+      const params = new URLSearchParams();
+      if (selectedTripId) {
+        params.append('trip_id', selectedTripId);
+      }
+      if (params.toString()) {
+        url += '?' + params.toString();
+      }
+      
+      const response = await fetch(url);
       const data = await response.json();
       // 날짜순 정렬 (최신순)
       const sorted = data.sort((a, b) => {
@@ -84,6 +110,22 @@ function MainPage() {
         <div className="header-content">
           <h1>여행 정산 가계부</h1>
           <div className="header-actions">
+            <div className="trip-selector">
+              <label htmlFor="trip-select">여행:</label>
+              <select
+                id="trip-select"
+                value={selectedTripId || ''}
+                onChange={(e) => setSelectedTripId(e.target.value || null)}
+                className="trip-select"
+              >
+                <option value="">전체</option>
+                {trips.map(trip => (
+                  <option key={trip.id} value={trip.id}>
+                    {trip.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="date-selector">
               <label htmlFor="date-input">날짜:</label>
               <input
@@ -110,6 +152,7 @@ function MainPage() {
           expenses={expenses}
           users={users}
           selectedDate={selectedDate}
+          selectedTripId={selectedTripId}
           onExpenseAdded={handleExpenseAdded}
           onExpenseUpdated={handleExpenseUpdated}
           onExpenseDeleted={handleExpenseDeleted}

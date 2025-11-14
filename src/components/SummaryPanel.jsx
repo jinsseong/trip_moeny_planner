@@ -26,15 +26,15 @@ function SummaryPanel({ expenses, todayExpenses, todayTotal, settlement, selecte
         </button>
       </div>
 
-      {isExpanded && settlement && (
+      {isExpanded && settlement && settlement.userTotals && settlement.userTotals.length > 0 && (
         <div className="summary-details">
           <h3>개인별 부담금</h3>
           <div className="user-summary-list">
             {settlement.userTotals.map(user => (
               <div key={user.id} className="user-summary-item">
                 <div className="user-info">
-                  <Avatar name={user.name} size={32} />
-                  <span className="user-name">{user.name}</span>
+                  {user.name && <Avatar name={user.name} size={32} />}
+                  <span className="user-name">{user.name || '이름 없음'}</span>
                 </div>
                 <span className="user-amount">{user.amount.toLocaleString()}원</span>
               </div>

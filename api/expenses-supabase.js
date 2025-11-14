@@ -11,9 +11,9 @@ export default async function handler(req, res) {
   }
   
   try {
-    // GET: 지출 항목 조회 (날짜 필터링 가능)
+    // GET: 지출 항목 조회 (날짜, trip_id 필터링 가능)
     if (req.method === 'GET') {
-      const { date } = req.query;
+      const { date, trip_id } = req.query;
       
       let query = supabase
         .from('expenses')
@@ -32,6 +32,10 @@ export default async function handler(req, res) {
       
       if (date) {
         query = query.eq('date', date);
+      }
+      
+      if (trip_id) {
+        query = query.eq('trip_id', trip_id);
       }
       
       const { data, error } = await query;
@@ -55,8 +59,10 @@ export default async function handler(req, res) {
           date: expense.date,
           amount: expense.amount,
           location: expense.location,
-          memo: expense.item_name || expense.memo || '', // item_name을 memo로 매핑 (기존 호환성)
+          item_name: expense.item_name || '', // 항목명 (별도 필드)
+          memo: expense.memo || '', // 메모 (별도 필드)
           category: expense.category || '기타',
+          trip_id: expense.trip_id || null,
           created_at: expense.created_at,
           participant_ids: participantIds,
           participant_names: participantNames
@@ -68,7 +74,7 @@ export default async function handler(req, res) {
     
     // POST: 새 지출 항목 추가
     if (req.method === 'POST') {
-      const { date, amount, location, memo, category, participant_ids } = req.body;
+      const { date, amount, location, item_name, memo, category, participant_ids, trip_id } = req.body;
       
       if (!date || !amount || !participant_ids || participant_ids.length === 0) {
         return res.status(400).json({ error: '날짜, 금액, 참여자는 필수입니다.' });
@@ -82,9 +88,10 @@ export default async function handler(req, res) {
             date,
             amount: parseInt(amount),
             location: location || null,
-            item_name: memo || null,
+            item_name: item_name || null,
             memo: memo || null,
-            category: category || '기타'
+            category: category || '기타',
+            trip_id: trip_id || null
           }
         ])
         .select()
@@ -139,8 +146,10 @@ export default async function handler(req, res) {
         date: fullExpense.date,
         amount: fullExpense.amount,
         location: fullExpense.location,
-        memo: fullExpense.item_name || fullExpense.memo || '',
+        item_name: fullExpense.item_name || '',
+        memo: fullExpense.memo || '',
         category: fullExpense.category || '기타',
+        trip_id: fullExpense.trip_id || null,
         created_at: fullExpense.created_at,
         participant_ids: participantIds,
         participant_names: participantNames
@@ -149,23 +158,29 @@ export default async function handler(req, res) {
     
     // PUT: 지출 항목 수정
     if (req.method === 'PUT') {
-      const { id, date, amount, location, memo, category, participant_ids } = req.body;
+      const { id, date, amount, location, item_name, memo, category, participant_ids, trip_id } = req.body;
       
       if (!id || !date || !amount || !participant_ids || participant_ids.length === 0) {
         return res.status(400).json({ error: 'ID, 날짜, 금액, 참여자는 필수입니다.' });
       }
       
       // 지출 항목 수정
+      const updateData = {
+        date,
+        amount: parseInt(amount),
+        location: location || null,
+        item_name: item_name || null,
+        memo: memo || null,
+        category: category || '기타'
+      };
+      
+      if (trip_id !== undefined) {
+        updateData.trip_id = trip_id || null;
+      }
+      
       const { error: updateError } = await supabase
         .from('expenses')
-        .update({
-          date,
-          amount: parseInt(amount),
-          location: location || null,
-          item_name: memo || null,
-          memo: memo || null,
-          category: category || '기타'
-        })
+        .update(updateData)
         .eq('id', id);
       
       if (updateError) throw updateError;
@@ -225,8 +240,10 @@ export default async function handler(req, res) {
         date: fullExpense.date,
         amount: fullExpense.amount,
         location: fullExpense.location,
-        memo: fullExpense.item_name || fullExpense.memo || '',
+        item_name: fullExpense.item_name || '',
+        memo: fullExpense.memo || '',
         category: fullExpense.category || '기타',
+        trip_id: fullExpense.trip_id || null,
         created_at: fullExpense.created_at,
         participant_ids: participantIds,
         participant_names: participantNames

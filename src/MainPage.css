@@ -37,16 +37,34 @@
   gap: 1rem;
 }
 
+.trip-selector,
 .date-selector {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.trip-selector label,
 .date-selector label {
   font-size: 0.875rem;
   color: #6c757d;
   font-weight: 500;
+}
+
+.trip-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  background: #ffffff;
+  min-width: 150px;
+}
+
+.trip-select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .date-input {
