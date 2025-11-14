@@ -18,7 +18,15 @@ export default async function handler(req, res) {
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      // 테이블이 없거나 오류가 발생하면 빈 배열 반환
+      if (error) {
+        // 테이블이 없는 경우 (42P01: relation does not exist)
+        if (error.code === '42P01' || error.message.includes('does not exist')) {
+          console.warn('trips 테이블이 아직 생성되지 않았습니다. schema_trips.sql을 실행하세요.');
+          return res.status(200).json([]);
+        }
+        throw error;
+      }
       
       return res.status(200).json(data || []);
     }

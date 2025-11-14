@@ -30,17 +30,36 @@ function MainPage() {
   const loadUsers = async () => {
     try {
       const response = await fetch(`${API_BASE}/users`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      // 배열인지 확인
+      if (!Array.isArray(data)) {
+        console.error('사용자 데이터가 배열이 아닙니다:', data);
+        setUsers([]);
+        return;
+      }
       setUsers(data);
     } catch (error) {
       console.error('사용자 로드 오류:', error);
+      setUsers([]);
     }
   };
 
   const loadTrips = async () => {
     try {
       const response = await fetch(`${API_BASE}/trips`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      // 배열인지 확인
+      if (!Array.isArray(data)) {
+        console.error('여행 데이터가 배열이 아닙니다:', data);
+        setTrips([]);
+        return;
+      }
       setTrips(data || []);
       // 첫 번째 여행을 기본 선택
       if (data && data.length > 0 && !selectedTripId) {
@@ -48,6 +67,7 @@ function MainPage() {
       }
     } catch (error) {
       console.error('여행 로드 오류:', error);
+      setTrips([]);
     }
   };
 
@@ -63,7 +83,16 @@ function MainPage() {
       }
       
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      // 배열인지 확인
+      if (!Array.isArray(data)) {
+        console.error('지출 데이터가 배열이 아닙니다:', data);
+        setExpenses([]);
+        return;
+      }
       // 날짜순 정렬 (최신순)
       const sorted = data.sort((a, b) => {
         const dateCompare = b.date.localeCompare(a.date);
@@ -73,6 +102,7 @@ function MainPage() {
       setExpenses(sorted);
     } catch (error) {
       console.error('지출 로드 오류:', error);
+      setExpenses([]);
     }
   };
 

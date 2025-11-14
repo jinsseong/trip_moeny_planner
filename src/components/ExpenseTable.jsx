@@ -171,6 +171,18 @@ function ExpenseTable({ expenses, users, selectedDate, selectedTripId, onExpense
     return `${year}.${month}.${day} (${weekday})`;
   };
 
+  // expenses가 배열인지 확인
+  if (!Array.isArray(expenses)) {
+    console.error('expenses가 배열이 아닙니다:', expenses);
+    return (
+      <div className="expense-table-container">
+        <div className="table-wrapper">
+          <p>데이터를 불러오는 중 오류가 발생했습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
   // 날짜별로 그룹핑
   const groupedExpenses = expenses.reduce((groups, expense) => {
     const date = expense.date;
