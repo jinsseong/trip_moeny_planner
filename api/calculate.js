@@ -1,4 +1,4 @@
-import { getDatabase } from '../database/json-db.js';
+import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
   // CORS 헤더 설정
@@ -13,49 +13,81 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: '지원하지 않는 메서드입니다.' });
   }
+
+  // Supabase 클라이언트 초기화 (Vercel 환경변수 사용)
+  const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Supabase 환경변수 누락');
+    return res.status(500).json({ 
+      error: 'Supabase 환경변수가 설정되지 않았습니다.',
+      details: 'Vercel 대시보드에서 VITE_SUPABASE_URL과 VITE_SUPABASE_ANON_KEY를 확인하세요.'
+    });
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey);
   
   try {
-    const db = getDatabase();
     const { date } = req.query;
     
-    // 모든 사용자 조회
-    const users = db.prepare('SELECT * FROM users ORDER BY name').all();
+    // 모든 참가자 조회
+    const { data: users, error: usersError } = await supabase
+      .from('participants')
+      .select('*')
+      .order('name', { ascending: true });
+    
+    if (usersError) throw usersError;
     
     // 날짜별 지출 조회
-    let expenses;
+    let expensesQuery = supabase
+      .from('expenses')
+      .select(`
+        *,
+        expense_participants (
+          participant_id,
+          participants (
+            id,
+            name
+          )
+        )
+      `)
+      .order('date', { ascending: false })
+      .order('created_at', { ascending: false });
+    
     if (date) {
-      expenses = db.prepare(`
-        SELECT e.*, 
-               GROUP_CONCAT(u.id) as participant_ids,
-               GROUP_CONCAT(u.name) as participant_names
-        FROM expenses e
-        LEFT JOIN expense_participants ep ON e.id = ep.expense_id
-        LEFT JOIN users u ON ep.user_id = u.id
-        WHERE e.date = ?
-        GROUP BY e.id
-      `).all(date);
-    } else {
-      expenses = db.prepare(`
-        SELECT e.*, 
-               GROUP_CONCAT(u.id) as participant_ids,
-               GROUP_CONCAT(u.name) as participant_names
-        FROM expenses e
-        LEFT JOIN expense_participants ep ON e.id = ep.expense_id
-        LEFT JOIN users u ON ep.user_id = u.id
-        GROUP BY e.id
-      `).all();
+      expensesQuery = expensesQuery.eq('date', date);
     }
     
-    // participant_ids와 participant_names를 배열로 변환
-    const formattedExpenses = expenses.map(expense => ({
-      ...expense,
-      participant_ids: expense.participant_ids 
-        ? expense.participant_ids.split(',').map(Number)
-        : [],
-      participant_names: expense.participant_names 
-        ? expense.participant_names.split(',')
-        : []
-    }));
+    const { data: expenses, error: expensesError } = await expensesQuery;
+    
+    if (expensesError) throw expensesError;
+    
+    // 데이터 포맷팅
+    const formattedExpenses = expenses.map(expense => {
+      const participantIds = expense.expense_participants
+        ? expense.expense_participants.map(ep => ep.participant_id)
+        : [];
+      
+      const participantNames = expense.expense_participants
+        ? expense.expense_participants
+            .map(ep => ep.participants?.name)
+            .filter(Boolean)
+        : [];
+      
+      return {
+        id: expense.id,
+        date: expense.date,
+        amount: expense.amount,
+        location: expense.location,
+        item_name: expense.item_name || '',
+        memo: expense.memo || '',
+        category: expense.category || '기타',
+        created_at: expense.created_at,
+        participant_ids: participantIds,
+        participant_names: participantNames
+      };
+    });
     
     // 사용자별 부담 금액 계산
     const userTotals = {};
@@ -72,7 +104,7 @@ export default async function handler(req, res) {
     formattedExpenses.forEach(expense => {
       totalAmount += expense.amount;
       
-      if (expense.participant_ids.length > 0) {
+      if (expense.participant_ids && expense.participant_ids.length > 0) {
         const perPerson = Math.floor(expense.amount / expense.participant_ids.length);
         const remainder = expense.amount % expense.participant_ids.length;
         
@@ -94,8 +126,7 @@ export default async function handler(req, res) {
       expenses: formattedExpenses
     });
   } catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+    console.error('Supabase Error:', error);
+    return res.status(500).json({ error: '서버 오류가 발생했습니다.', details: error.message });
   }
 }
-
