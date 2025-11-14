@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/client.js';
+import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
   // CORS 헤더 설정
@@ -9,6 +9,20 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+
+  // Supabase 클라이언트 초기화 (Vercel 환경변수 사용)
+  const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Supabase 환경변수 누락');
+    return res.status(500).json({ 
+      error: 'Supabase 환경변수가 설정되지 않았습니다.',
+      details: 'Vercel 대시보드에서 VITE_SUPABASE_URL과 VITE_SUPABASE_ANON_KEY를 확인하세요.'
+    });
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey);
   
   try {
     // GET: 지출 항목 조회 (날짜, trip_id 필터링 가능)
